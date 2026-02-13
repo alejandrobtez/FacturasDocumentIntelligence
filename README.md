@@ -8,7 +8,7 @@
 
 ## 📖 Sobre el Proyecto
 
-**FacturasDocumentIntelligence** es un proyecto **académico** que implementa una solución ETL (*Extract, Transform, Load*) para la digitalización automatizada de facturas de suministros (Luz y Gas).
+**FacturasDocumentIntelligence** es un proyecto **académico** que implementa una solución ETL (*Extract, Transform, Load*) real para la digitalización automatizada de facturas de suministros (Luz y Gas).
 
 El objetivo principal es eliminar la gestión manual de documentos utilizando servicios cognitivos en la nube. Mediante un **Modelo Neuronal Personalizado** (Custom Neural Model), el sistema es capaz de extraer más de 40 datos complejos —como tablas de potencias, periodos tarifarios (P1-P6) y códigos CUPS— e insertarlos estructuradamente en una base de datos SQL.
 
@@ -19,6 +19,7 @@ El objetivo principal es eliminar la gestión manual de documentos utilizando se
 El despliegue se ha realizado íntegramente en Microsoft Azure, utilizando una arquitectura *Serverless* y servicios PaaS para garantizar la escalabilidad.
 
 ![Recursos Azure](img/facturas2.jpg)
+
 > **Fig 1.** *Grupo de recursos creado en Azure: Se observa el recurso de **Document Intelligence** (Motor de IA) y la **Storage Account** necesaria para alojar los datasets de entrenamiento.*
 
 ---
@@ -28,22 +29,25 @@ El despliegue se ha realizado íntegramente en Microsoft Azure, utilizando una a
 Para lograr una alta precisión en documentos no estandarizados, se ha entrenado un modelo específico utilizando **Azure Document Intelligence Studio**.
 
 ### 1. Dataset de Entrenamiento
-Se ha recopilado un conjunto de facturas reales de diferentes compañías comercializadoras para enseñar al modelo a generalizar la ubicación de los datos.
+Se ha recopilado un conjunto de facturas reales para enseñar al modelo a generalizar la ubicación de los datos.
 
 ![Facturas Dataset](img/facturas1.jpg)
-> **Fig 2.** *Muestra de las 5 facturas utilizadas como "Ground Truth" para el entrenamiento del modelo.*
+
+> **Fig 2.** *Muestra de las 5 facturas utilizadas para el entrenamiento del modelo.*
 
 ### 2. Ingesta y Etiquetado (Blob Storage)
 Los documentos se cargan en un contenedor de Azure Blob Storage, que actúa como fuente de datos para la herramienta de etiquetado.
 
 ![Blob Storage](img/facturas3.jpg)
+
 > **Fig 3.** *Vista del contenedor en la Storage Account. Se muestran los archivos PDF junto con sus ficheros de etiquetas (`.ocr`, `.labels`) generados tras el proceso de entrenamiento.*
 
 ### 3. Validación y Precisión
-Una vez entrenado, el modelo ofrece métricas de confianza (*Confidence Score*) para cada etiqueta definida.
+Una vez entrenado, el modelo ofrece métricas de confianza para cada etiqueta definida.
 
 ![Precision Modelo](img/facturas4.jpg)
-> **Fig 4.** *Panel de resultados del entrenamiento. Se observa una alta precisión (cercana al 99%) en campos críticos como importes totales y fechas, validando la viabilidad del modelo.*
+
+> **Fig 4.** *Panel de resultados del entrenamiento. Se observa la precisión, validando la viabilidad del modelo.*
 
 ---
 
@@ -55,6 +59,7 @@ La orquestación del proceso se realiza mediante un script en **Python** que con
 El script utiliza el SDK de Azure (`azure-ai-documentintelligence`) y `pyodbc` para la persistencia de datos. Gestiona automáticamente el flujo de archivos entre carpetas locales.
 
 ![Configuracion Script](img/facturas5.jpg)
+
 > **Fig 5.** *Fragmento del código fuente `main.py` donde se configuran:*
 > * *Credenciales del recurso de Azure y conexión a SQL Database.*
 > * *Rutas del sistema de archivos: Carpeta de entrada (para procesar) y carpeta de salida (procesados).*
@@ -70,9 +75,10 @@ El script utiliza el SDK de Azure (`azure-ai-documentintelligence`) y `pyodbc` p
 
 ## 🗄️ Persistencia y Validación (SQL Server)
 
-Los datos extraídos se almacenan en una base de datos relacional **Azure SQL Database**. Para la gestión y verificación de los datos, utilizamos **SSMS (SQL Server Management Studio)**.
+Los datos extraídos se almacenan en una base de datos relacional **Azure SQL Database** (en mi caso una base de datos compartida con mis compañeros, dado que es un proyecto académico). Para la gestión y verificación de los datos, utilizamos **SSMS (SQL Server Management Studio)**.
 
 ![Consulta SSMS](img/facturas6.jpg)
+
 > **Fig 6.** *Consulta de validación en SSMS. Se filtra por el campo identificativo del alumno (`CorreoAlumno`) para verificar la correcta inserción de los registros. Se puede apreciar cómo el sistema ha rellenado correctamente campos complejos como las potencias contratadas desglosadas por periodos.*
 
 ---
@@ -88,10 +94,11 @@ Los datos extraídos se almacenan en una base de datos relacional **Azure SQL Da
 
 ## 🛠️ Tecnologías Utilizadas
 
-* **Lenguaje:** Python 3.10+
+* **Lenguaje:** Python 3.13
 * **Cloud Services:** Azure Document Intelligence, Azure Blob Storage.
 * **Base de Datos:** Azure SQL Database.
 * **Herramientas:** VS Code, SQL Server Management Studio (SSMS).
+* **Inteligencia Artificial:** Gemini.
 
 ---
 *Proyecto Académico desarrollado por Alejandro Benítez*
