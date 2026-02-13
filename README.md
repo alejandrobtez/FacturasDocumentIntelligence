@@ -101,4 +101,4 @@ Los datos extraídos se almacenan en una base de datos relacional **Azure SQL Da
 * **Inteligencia Artificial:** Gemini.
 
 ---
-*Proyecto Académico desarrollado por Alejandro Benítez*
+*Desarrollado por Alejandro Benítez*
