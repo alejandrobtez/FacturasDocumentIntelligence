@@ -102,3 +102,7 @@ Extracted data is stored in a relational **Azure SQL Database** (in this case, a
 
 ---
 *Developed by [Alejandro Benitez](https://github.com/alejandrobtez)*
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
