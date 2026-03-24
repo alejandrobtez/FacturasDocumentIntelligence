@@ -1,104 +1,104 @@
 # 📄 FacturasDocumentIntelligence
 
-### Procesamiento Automatizado de Facturas Energéticas con Azure AI
+### Automated Processing of Energy Invoices with Azure AI
 
-> **🚀 VISTA RÁPIDA:** Puedes consultar el código del script principal (ETL) aquí: [**🐍 main.py**](./main.py)
-
----
-
-## 📖 Sobre el Proyecto
-
-**FacturasDocumentIntelligence** es un proyecto **académico** que implementa una solución ETL (*Extract, Transform, Load*) real para la digitalización automatizada de facturas de suministros (Luz y Gas).
-
-El objetivo principal es eliminar la gestión manual de documentos utilizando servicios cognitivos en la nube. Mediante un **Modelo Neuronal Personalizado** (Custom Neural Model), el sistema es capaz de extraer más de 40 datos complejos —como tablas de potencias, periodos tarifarios (P1-P6) y códigos CUPS— e insertarlos estructuradamente en una base de datos SQL.
+> **🚀 QUICK VIEW:** You can check the main script (ETL) code here: [**🐍 main.py**](./main.py)
 
 ---
 
-## ☁️ Infraestructura Cloud (Azure)
+## 📖 About the Project
 
-El despliegue se ha realizado íntegramente en Microsoft Azure, utilizando una arquitectura *Serverless* y servicios PaaS para garantizar la escalabilidad.
+**FacturasDocumentIntelligence** is an **academic** project that implements a real-world ETL (*Extract, Transform, Load*) solution for the automated digitization of utility invoices (Electricity and Gas).
 
-![Recursos Azure](img/facturas2.jpg)
-
-> **Fig 1.** *Grupo de recursos creado en Azure: Se observa el recurso de **Document Intelligence** (Motor de IA) y la **Storage Account** necesaria para alojar los datasets de entrenamiento.*
+The primary goal is to eliminate manual document management using cloud-based cognitive services. By utilizing a **Custom Neural Model**, the system is capable of extracting over 40 complex data points—such as power tables, billing periods (P1-P6), and CUPS codes—and inserting them into a structured SQL database.
 
 ---
 
-## 🧠 Entrenamiento del Modelo IA
+## ☁️ Cloud Infrastructure (Azure)
 
-Para lograr una alta precisión en documentos no estandarizados, se ha entrenado un modelo específico utilizando **Azure Document Intelligence Studio**.
+The deployment was carried out entirely on Microsoft Azure, using a *Serverless* architecture and PaaS services to ensure scalability.
 
-### 1. Dataset de Entrenamiento
-Se ha recopilado un conjunto de facturas reales para enseñar al modelo a generalizar la ubicación de los datos.
+![Azure Resources](img/facturas2.jpg)
 
-![Facturas Dataset](img/facturas1.jpg)
+> **Fig 1.** *Resource group created in Azure: Includes the **Document Intelligence** resource (AI Engine) and the **Storage Account** required to host the training datasets.*
 
-> **Fig 2.** *Muestra de las 5 facturas utilizadas para el entrenamiento del modelo.*
+---
 
-### 2. Ingesta y Etiquetado (Blob Storage)
-Los documentos se cargan en un contenedor de Azure Blob Storage, que actúa como fuente de datos para la herramienta de etiquetado.
+## 🧠 AI Model Training
+
+To achieve high precision in non-standardized documents, a specific model was trained using **Azure Document Intelligence Studio**.
+
+### 1. Training Dataset
+A set of real invoices was compiled to teach the model how to generalize data locations.
+
+![Invoices Dataset](img/facturas1.jpg)
+
+> **Fig 2.** *Sample of the 5 invoices used for model training.*
+
+### 2. Ingestion and Labeling (Blob Storage)
+Documents are uploaded to an Azure Blob Storage container, which serves as the data source for the labeling tool.
 
 ![Blob Storage](img/facturas3.jpg)
 
-> **Fig 3.** *Vista del contenedor en la Storage Account. Se muestran los archivos PDF junto con sus ficheros de etiquetas (`.ocr`, `.labels`) generados tras el proceso de entrenamiento.*
+> **Fig 3.** *View of the Storage Account container. Shows the PDF files along with their label files (`.ocr`, `.labels`) generated after the training process.*
 
-### 3. Validación y Precisión
-Una vez entrenado, el modelo ofrece métricas de confianza para cada etiqueta definida.
+### 3. Validation and Accuracy
+Once trained, the model provides confidence metrics for each defined tag.
 
-![Precision Modelo](img/facturas4.jpg)
+![Model Precision](img/facturas4.jpg)
 
-> **Fig 4.** *Panel de resultados del entrenamiento. Se observa la precisión, validando la viabilidad del modelo.*
-
----
-
-## ⚙️ El Motor de Procesamiento (Python Script)
-
-La orquestación del proceso se realiza mediante un script en **Python** que conecta el entorno local con la nube y la base de datos.
-
-### Configuración y Conexión
-El script utiliza el SDK de Azure (`azure-ai-documentintelligence`) y `pyodbc` para la persistencia de datos. Gestiona automáticamente el flujo de archivos entre carpetas locales.
-
-![Configuracion Script](img/facturas5.jpg)
-
-> **Fig 5.** *Fragmento del código fuente `main.py` donde se configuran:*
-> * *Credenciales del recurso de Azure y conexión a SQL Database.*
-> * *Rutas del sistema de archivos: Carpeta de entrada (para procesar) y carpeta de salida (procesados).*
-
-**Flujo lógico del Script:**
-1.  **Watchdog:** Detecta nuevos PDFs en la carpeta local.
-2.  **Extracción:** Envía el documento a la API de Azure.
-3.  **Transformación:** Normaliza fechas, limpia símbolos de moneda y gestiona nulos (Lógica diferenciada para Luz vs Gas).
-4.  **Carga:** Inserta los datos limpios en SQL Server.
-5.  **Limpieza:** Mueve el archivo procesado para evitar duplicidades.
+> **Fig 4.** *Training results panel. Accuracy is observed, validating the model's viability.*
 
 ---
 
-## 🗄️ Persistencia y Validación (SQL Server)
+## ⚙️ The Processing Engine (Python Script)
 
-Los datos extraídos se almacenan en una base de datos relacional **Azure SQL Database** (en mi caso una base de datos compartida con mis compañeros, dado que es un proyecto académico). Para la gestión y verificación de los datos, utilizamos **SSMS (SQL Server Management Studio)**.
+The process orchestration is handled by a **Python** script that connects the local environment with the cloud and the database.
 
-![Consulta SSMS](img/facturas6.jpg)
+### Configuration and Connection
+The script uses the Azure SDK (`azure-ai-documentintelligence`) and `pyodbc` for data persistence. It automatically manages the file flow between local folders.
 
-> **Fig 6.** *Consulta de validación en SSMS. Se filtra por el campo identificativo del alumno (`CorreoAlumno`) para verificar la correcta inserción de los registros. Se puede apreciar cómo el sistema ha rellenado correctamente campos complejos como las potencias contratadas desglosadas por periodos.*
+![Script Configuration](img/facturas5.jpg)
+
+> **Fig 5.** *Snippet of the `main.py` source code where the following are configured:*
+> * *Azure resource credentials and SQL Database connection.*
+> * *File system paths: Input folder (to process) and output folder (processed).*
+
+**Script Logical Flow:**
+1. **Watchdog:** Detects new PDFs in the local folder.
+2. **Extraction:** Sends the document to the Azure API.
+3. **Transformation:** Normalizes dates, cleans currency symbols, and handles nulls (Differentiated logic for Electricity vs. Gas).
+4. **Load:** Inserts cleaned data into SQL Server.
+5. **Cleanup:** Moves the processed file to avoid duplication.
 
 ---
 
-## ✨ Características Principales
+## 🗄️ Persistence and Validation (SQL Server)
 
-* **🧠 Modelo Híbrido:** Un único modelo capaz de interpretar facturas de **Luz** (con 6 periodos horarios) y **Gas** (términos fijos y variables) simultáneamente.
-* **🛡️ Normalización de Datos:** Algoritmos propios para convertir fechas en lenguaje natural (ej: "17 de junio") a formato estándar SQL (`YYYY-MM-DD`).
-* **📂 Gestión Automática:** Sistema de movimiento de archivos para mantener el entorno de trabajo limpio.
-* **🎓 Identificación Académica:** Trazabilidad de los registros mediante el correo del alumno.
+Extracted data is stored in a relational **Azure SQL Database** (in this case, a database shared with classmates, given it is an academic project). For data management and verification, we use **SSMS (SQL Server Management Studio)**.
+
+![SSMS Query](img/facturas6.jpg)
+
+> **Fig 6.** *Validation query in SSMS. Filtering by the student identification field (`CorreoAlumno`) to verify correct record insertion. It can be seen how the system has correctly filled complex fields such as contracted power broken down by periods.*
 
 ---
 
-## 🛠️ Tecnologías Utilizadas
+## ✨ Main Features
 
-* **Lenguaje:** Python 3.13
+* **🧠 Hybrid Model:** A single model capable of interpreting **Electricity** invoices (with 6 time periods) and **Gas** invoices (fixed and variable terms) simultaneously.
+* **🛡️ Data Normalization:** Custom algorithms to convert natural language dates (e.g., "17 de junio") into standard SQL format (`YYYY-MM-DD`).
+* **📂 Automatic Management:** File movement system to keep the workspace clean.
+* **🎓 Academic Identification:** Record traceability using the student's email.
+
+---
+
+## 🛠️ Technologies Used
+
+* **Language:** Python 3.13
 * **Cloud Services:** Azure Document Intelligence, Azure Blob Storage.
-* **Base de Datos:** Azure SQL Database.
-* **Herramientas:** VS Code, SQL Server Management Studio (SSMS).
-* **Inteligencia Artificial:** Gemini.
+* **Database:** Azure SQL Database.
+* **Tools:** VS Code, SQL Server Management Studio (SSMS).
+* **Artificial Intelligence:** Gemini.
 
 ---
-*Desarrollado por Alejandro Benítez*
+*Developed by [Alejandro Benitez](https://github.com/alejandrobtez)*
